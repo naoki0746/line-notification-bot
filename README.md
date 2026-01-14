@@ -24,3 +24,7 @@ Windowsのタスクスケジューラを使って、毎日決まった時間にL
 ```text
 requests
 python-dotenv
+
+## セットアップ
+```bash
+pip install -r requirements.txt
