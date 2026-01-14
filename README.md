@@ -1,12 +1,19 @@
 # line-notification-bot
 
-Pythonで作ったLINE通知アプリです。  
-Windowsのタスクスケジューラを使って、毎日決まった時間にLINEへメッセージを送信できます。
+Pythonで作った **LINE通知アプリ** です。  
+Windowsのタスクスケジューラを使って、**毎日決まった時間にLINEへメッセージを送信**できます。
+
+---
+
+## 概要
+- 個人利用向けのシンプルなLINE通知ツール
+- サーバー不要（Windows PCで動作）
+- タスクスケジューラと組み合わせて定期実行可能
 
 ---
 
 ## 機能
-- LINE Messaging API を使ってメッセージを送信
+- LINE Messaging API を使ったメッセージ送信
 - タスクスケジューラ対応（1日1回送信）
 - 多重起動防止ガードあり
 - ログ出力あり
@@ -21,9 +28,10 @@ Windowsのタスクスケジューラを使って、毎日決まった時間にL
 ---
 
 ## 使用ライブラリ
-```text
-requests
-python-dotenv
+- requests
+- python-dotenv
+
+---
 
 ## セットアップ
 ```bash
