@@ -122,7 +122,7 @@ def main() -> None:
         # 送信するメッセージ本文を決める
         # もし LINE_MESSAGE という環境変数があればそれを使い、
         # なければ "定期通知です！" を使う
-        message = os.getenv("LINE_MESSAGE", "定期通知です！")
+        message = os.getenv("LINE_MESSAGE", "家族に感謝")
 
         # ログ出力（何をするか分かる）
         logging.info("Sending LINE message...")
@@ -150,3 +150,4 @@ if __name__ == "__main__":
 
         # 終了コード1で終了（GitHub Actionsでジョブが失敗扱いになる）
         sys.exit(1)
+
