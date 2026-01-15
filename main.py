@@ -88,4 +88,5 @@ def push_text(text: str) -> None:
 # ----------------------------
 if __name__ == "__main__":
     # push_text 関数を呼び出して、テストメッセージを送信する
+
     push_text("テスト送信：自分のPCから送れた！")
