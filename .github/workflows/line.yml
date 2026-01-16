@@ -18,7 +18,7 @@ on:
     # cron は UTC 基準
     # "0 0 * * *" = 毎日 00:00 UTC
     # 日本時間(JST)では 毎日 09:00
-    - cron: "0 0 * * *"
+    - cron: "*/5 * * * *"
 
 concurrency:
   # 同じグループ名の workflow は同時に1つだけ
