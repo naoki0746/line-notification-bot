@@ -12,6 +12,8 @@ on:
   # 手動実行を許可する設定
   # Actions画面に「Run workflow」ボタンが出る
   workflow_dispatch: {}
+    push:
+    branches: ["main"]
 
   # スケジュール実行（cron）
   schedule:
