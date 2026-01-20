@@ -16,6 +16,9 @@ import logging
 # ファイルパス操作をラクにする標準ライブラリ（ロックファイル作成に使う）
 from pathlib import Path
 
+# 曜日判定に使う標準ライブラリ
+import datetime
+
 # HTTP通信（API呼び出し）をする外部ライブラリ
 import requests
 
@@ -34,6 +37,54 @@ def must_env(name: str) -> str:
 
     # ちゃんと値があれば返す
     return v
+
+
+# ----------------------------
+# 曜日ごとのメッセージを決める関数
+# 優先順位：
+# 1) LINE_MESSAGE があればそれ（上書き用）
+# 2) 曜日ごとの環境変数があればそれ（任意）
+# 3) デフォルトの曜日メッセージ
+#
+# 曜日別の環境変数名（任意）：
+#   LINE_MESSAGE_MON, LINE_MESSAGE_TUE, LINE_MESSAGE_WED,
+#   LINE_MESSAGE_THU, LINE_MESSAGE_FRI, LINE_MESSAGE_SAT, LINE_MESSAGE_SUN
+# ----------------------------
+def decide_message() -> str:
+    # 1) まずは完全上書き（毎回これを送りたい時用）
+    override = os.getenv("LINE_MESSAGE")
+    if override:
+        return override
+
+    # 2) 今日の曜日を取得
+    # weekday: 0=月, 1=火, 2=水, 3=木, 4=金, 5=土, 6=日
+    weekday = datetime.date.today().weekday()
+
+    # 3) 曜日別に読む環境変数名（任意）
+    weekday_env_keys = {
+        0: "LINE_MESSAGE_MON",
+        1: "LINE_MESSAGE_TUE",
+        2: "LINE_MESSAGE_WED",
+        3: "LINE_MESSAGE_THU",
+        4: "LINE_MESSAGE_FRI",
+        5: "LINE_MESSAGE_SAT",
+        6: "LINE_MESSAGE_SUN",
+    }
+
+    # 4) デフォルトの曜日メッセージ（ここを好きに編集OK）
+    defaults = {
+        0: "月曜！継続は力なり",
+        1: "火曜！断捨離しよう",
+        2: "水曜！歯の健康を考えよう",
+        3: "木曜！清潔感は大事",
+        4: "金曜！日記を書こう",
+        5: "土曜！目から力を抜こう",
+        6: "日曜！家族に感謝",
+    }
+
+    # 5) 曜日別環境変数があればそれを採用、なければデフォルト
+    key = weekday_env_keys[weekday]
+    return os.getenv(key, defaults[weekday])
 
 
 # ----------------------------
@@ -119,13 +170,14 @@ def main() -> None:
         token = must_env("LINE_CHANNEL_ACCESS_TOKEN")
         to = must_env("LINE_TO")
 
-        # 送信するメッセージ本文を決める
-        # もし LINE_MESSAGE という環境変数があればそれを使い、
-        # なければ "定期通知です！" を使う
-        message = os.getenv("LINE_MESSAGE", "家族に感謝")
+        # 送信するメッセージ本文を決める（曜日対応）
+        message = decide_message()
 
         # ログ出力（何をするか分かる）
         logging.info("Sending LINE message...")
+
+        # どのメッセージを送るかログに出す（デバッグ用）
+        logging.info(f"Message: {message}")
 
         # 実際にLINEへ送信
         send_line_push_message(token=token, to=to, text=message)
@@ -150,4 +202,3 @@ if __name__ == "__main__":
 
         # 終了コード1で終了（GitHub Actionsでジョブが失敗扱いになる）
         sys.exit(1)
-
